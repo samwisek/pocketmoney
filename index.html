@@ -156,6 +156,1680 @@
             color: var(--text-light);
         }
 
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: var(--bg);
+        }
+
+        .balance {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .balance.positive {
+            color: var(--success);
+        }
+
+        .balance.negative {
+            color: var(--danger);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--bg);
+            color: var(--text-light);
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-content.wide {
+            max-width: 600px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: var(--bg);
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .amount {
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .history-item .date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--text);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .import-export {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .quick-deduct {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-btn {
+            padding: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .card { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+        /* ===== PIN LOCK SCREEN ===== */
+        .pin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .pin-overlay.hidden {
+            display: none !important;
+        }
+
+        .pin-box {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 360px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .pin-box h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .pin-box p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .pin-dot.filled {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .pin-dot.error {
+            background: var(--danger);
+            border-color: var(--danger);
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pin-key {
+            padding: 18px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .pin-key:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .pin-key:active {
+            transform: scale(0.95);
+        }
+
+        .pin-key.wide {
+            grid-column: span 2;
+        }
+
+        .pin-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .pin-actions .btn {
+            font-size: 0.85rem;
+            padding: 8px 16px;
+        }
+
+        .pin-error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* Change PIN modal specific */
+        .pin-setup-display {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin: 15px 0;
+            min-height: 40px;
+            color: var(--primary);
+        }
+
+        .pin-step-info {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        /* Data Transfer */
+        .data-transfer-box {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .data-transfer-box h4 {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .sync-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--bg);
+        }
+
+        .sync-status.saved {
+            color: var(--success);
+        }
+
+        .sync-status.warning {
+            color: var(--warning);
+            background: #fffbeb;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== PIN LOCK SCREEN ===== -->
+    <div class="pin-overlay" id="pinOverlay">
+        <div class="pin-box">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">🔒</div>
+            <h2 id="pinTitle">Enter PIN</h2>
+            <p id="pinSubtitle">Unlock your Pocket Money Tracker</p>
+            
+            <div class="pin-display" id="pinDisplay">
+                <div class="pin-dot" id="dot0"></div>
+                <div class="pin-dot" id="dot1"></div>
+                <div class="pin-dot" id="dot2"></div>
+                <div class="pin-dot" id="dot3"></div>
+            </div>
+            
+            <div class="pin-pad" id="pinPad">
+                <button class="pin-key" onclick="enterDigit(1)">1</button>
+                <button class="pin-key" onclick="enterDigit(2)">2</button>
+                <button class="pin-key" onclick="enterDigit(3)">3</button>
+                <button class="pin-key" onclick="enterDigit(4)">4</button>
+                <button class="pin-key" onclick="enterDigit(5)">5</button>
+                <button class="pin-key" onclick="enterDigit(6)">6</button>
+                <button class="pin-key" onclick="enterDigit(7)">7</button>
+                <button class="pin-key" onclick="enterDigit(8)">8</button>
+                <button class="pin-key" onclick="enterDigit(9)">9</button>
+                <button class="pin-key" onclick="clearPin()">⌫</button>
+                <button class="pin-key" onclick="enterDigit(0)">0</button>
+                <button class="pin-key" onclick="submitPin()">✓</button>
+            </div>
+            
+            <div class="pin-actions" id="pinActions">
+                <button class="btn btn-secondary btn-sm" onclick="forgotPin()">Forgot PIN?</button>
+            </div>
+            
+            <div class="pin-error-msg" id="pinErrorMsg"></div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div id="mainApp" class="hidden">
+        <header>
+            <div class="header-content">
+                <h1>💰 Pocket Money Tracker (UGX)</h1>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="sync-status warning" id="syncStatus" title="Data is saved in this browser only. Use Export to move between devices.">
+                        ⚠️ Browser Only
+                    </span>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="openDataTransferModal()">🔄 Move Data</button>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="exportData()">📥 Export</button>
+                    <div class="file-input-wrapper btn btn-secondary btn-sm no-print">
+                        📤 Import
+                        <input type="file" id="importFile" accept=".json" onchange="importData(this)">
+                    </div>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="openChangePinModal()">🔐 Change PIN</button>
+                    <button class="btn btn-primary btn-sm no-print" onclick="openModal('addStudentModal')">+ Add Student</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Students</h3>
+                    <div class="value" id="totalStudents">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Balance</h3>
+                    <div class="value" id="totalBalance">UGX 0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Classes</h3>
+                    <div class="value" id="totalClasses">0</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="sidebar no-print">
+                    <div class="card">
+                        <h2>⚡ Quick Actions</h2>
+                        
+                        <div class="form-group">
+                            <label>Select Student</label>
+                            <select id="quickStudent" onchange="loadStudentBalance()">
+                                <option value="">-- Choose Student --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Current Balance</label>
+                            <input type="text" id="currentBalance" readonly style="font-weight: 700; font-size: 1.2rem; text-align: center;">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Deduct Amount (UGX)</label>
+                            <input type="number" id="deductAmount" placeholder="0" step="100" min="0">
+                            <div class="quick-deduct">
+                                <button class="quick-btn" onclick="setAmount(1000)">1K</button>
+                                <button class="quick-btn" onclick="setAmount(5000)">5K</button>
+                                <button class="quick-btn" onclick="setAmount(10000)">10K</button>
+                                <button class="quick-btn" onclick="setAmount(20000)">20K</button>
+                                <button class="quick-btn" onclick="setAmount(50000)">50K</button>
+                                <button class="quick-btn" onclick="setAmount(100000)">100K</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reason (Optional)</label>
+                            <input type="text" id="deductReason" placeholder="e.g., Stationery, Trip fee, Lunch...">
+                        </div>
+
+                        <button class="btn btn-danger" style="width: 100%;" onclick="deductMoney()">
+                            💸 Deduct Balance
+                        </button>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Add Money (UGX)</label>
+                            <input type="number" id="addAmount" placeholder="0" step="100" min="0">
+                        </div>
+                        <button class="btn btn-success" style="width: 100%;" onclick="addMoney()">
+                            ➕ Add to Balance
+                        </button>
+                    </div>
+
+                    <div class="card" style="margin-top: 20px;">
+                        <h2>📊 Class Filter</h2>
+                        <div class="form-group">
+                            <select id="classFilter" onchange="renderStudents()">
+                                <option value="">All Classes</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="resetFilter()">
+                            Show All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                            <h2>👨‍🎓 Students</h2>
+                            <div class="search-box" style="flex: 1; max-width: 300px;">
+                                <input type="text" id="searchInput" placeholder="Search students..." oninput="renderStudents()">
+                            </div>
+                        </div>
+
+                        <div id="studentsTable">
+                            <div class="empty-state">
+                                <div class="icon">📚</div>
+                                <h3>No students yet</h3>
+                                <p>Add your first student to get started</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="addStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Add New Student</h2>
+                <button class="close-btn" onclick="closeModal('addStudentModal')">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Student Name *</label>
+                <input type="text" id="newStudentName" placeholder="e.g., John Okello">
+            </div>
+            
+            <div class="form-group">
+                <label>Class *</label>
+                <select id="newStudentClass">
+                    <option value="">-- Select Class --</option>
+                    <option value="S.1">S.1</option>
+                    <option value="S.2">S.2</option>
+                    <option value="S.3">S.3</option>
+                    <option value="S.4">S.4</option>
+                    <option value="S.5">S.5</option>
+                    <option value="S.6">S.6</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Initial Balance (UGX)</label>
+                <input type="number" id="newStudentBalance" value="0" step="100" min="0">
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%;" onclick="addStudent()">
+                Add Student
+            </button>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📜 Transaction History</h2>
+                <button class="close-btn" onclick="closeModal('historyModal')">&times;</button>
+            </div>
+            <div id="historyContent"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Student</h2>
+                <button class="close-btn" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            
+            <input type="hidden" id="editStudentId">
+            
+            <div class="form-group">
+                <label>Student Name</label>
+                <input type="text" id="editStudentName">
+            </div>
+            
+            <div class="form-group">
+                <label>Class</label>
+                <select id="editStudentClass">
+                    <option value="">-- Select Class --</option>
+                    <option value="S.1">S.1</option>
+                    <option value="S.2">S.2</option>
+                    <option value="S.3">S.3</option>
+                    <option value="S.4">S.4</option>
+                    <option value="S.5">S.5</option>
+                    <option value="S.6">S.6</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Balance (UGX)</label>
+                <input type="number" id="editStudentBalance" step="100">
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%;" onclick="saveEdit()">
+                Save Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div class="modal" id="changePinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔐 Change PIN</h2>
+                <button class="close-btn" onclick="closeModal('changePinModal')">&times;</button>
+            </div>
+            
+            <div class="pin-step-info" id="changePinStep">Enter your current 4-digit PIN</div>
+            <div class="pin-setup-display" id="changePinDisplay">_ _ _ _</div>
+            
+            <div class="pin-pad" id="changePinPad">
+                <button class="pin-key" onclick="changePinEnterDigit(1)">1</button>
+                <button class="pin-key" onclick="changePinEnterDigit(2)">2</button>
+                <button class="pin-key" onclick="changePinEnterDigit(3)">3</button>
+                <button class="pin-key" onclick="changePinEnterDigit(4)">4</button>
+                <button class="pin-key" onclick="changePinEnterDigit(5)">5</button>
+                <button class="pin-key" onclick="changePinEnterDigit(6)">6</button>
+                <button class="pin-key" onclick="changePinEnterDigit(7)">7</button>
+                <button class="pin-key" onclick="changePinEnterDigit(8)">8</button>
+                <button class="pin-key" onclick="changePinEnterDigit(9)">9</button>
+                <button class="pin-key" onclick="changePinClear()">⌫</button>
+                <button class="pin-key" onclick="changePinEnterDigit(0)">0</button>
+                <button class="pin-key" onclick="changePinSubmit()">✓</button>
+            </div>
+            
+            <div class="pin-error-msg" id="changePinError" style="text-align: center;"></div>
+        </div>
+    </div>
+
+    <!-- Data Transfer Modal -->
+    <div class="modal" id="dataTransferModal">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2>🔄 Move Data Between Browsers/Devices</h2>
+                <button class="close-btn" onclick="closeModal('dataTransferModal')">&times;</button>
+            </div>
+            
+            <p style="color: var(--text-light); margin-bottom: 20px; font-size: 0.9rem;">
+                Since this app saves data only in your current browser, use these steps to move your data to another browser or device.
+            </p>
+
+            <div class="data-transfer-box">
+                <h4>📤 Step 1: Copy Data from This Browser</h4>
+                <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px;">
+                    Click below to copy all your student data. Then paste it into the other browser.
+                </p>
+                <button class="copy-btn" onclick="copyDataToClipboard()">📋 Copy All Data to Clipboard</button>
+                <div id="copyFeedback" style="margin-top: 8px; font-size: 0.85rem; color: var(--success); min-height: 20px;"></div>
+            </div>
+
+            <div class="data-transfer-box">
+                <h4>📥 Step 2: Paste Data into New Browser</h4>
+                <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px;">
+                    Open this site in the new browser, unlock with PIN, then paste the copied data below and click Import.
+                </p>
+                <textarea id="pasteDataArea" placeholder="Paste copied data here..."></textarea>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="importFromText()">
+                    📥 Import Pasted Data
+                </button>
+                <div id="pasteFeedback" style="margin-top: 8px; font-size: 0.85rem; color: var(--danger); min-height: 20px;"></div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: #fffbeb; border-radius: 8px; border-left: 4px solid var(--warning);">
+                <p style="font-size: 0.85rem; color: #92400e;">
+                    <strong>💡 Tip:</strong> You can also use the "Export" button to download a .json file, then use "Import" on the other browser to upload that file.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===================== PIN SYSTEM =====================
+        const DEFAULT_PIN = "0000";
+        let currentPin = localStorage.getItem('pocketMoneyPIN') || DEFAULT_PIN;
+        let pinInput = "";
+        let changePinInput = "";
+        let changePinStep = 1;
+        let newPinTemp = "";
+        let isLocked = true;
+
+        function initPin() {
+            if (!localStorage.getItem('pocketMoneyPIN')) {
+                localStorage.setItem('pocketMoneyPIN', DEFAULT_PIN);
+                currentPin = DEFAULT_PIN;
+            }
+            
+            document.getElementById('pinOverlay').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            resetPinInput();
+        }
+
+        function resetPinInput() {
+            pinInput = "";
+            updatePinDisplay();
+            document.getElementById('pinErrorMsg').textContent = "";
+            document.getElementById('pinTitle').textContent = "Enter PIN";
+            document.getElementById('pinSubtitle').textContent = "Unlock your Pocket Money Tracker";
+            document.getElementById('pinActions').innerHTML = `
+                <button class="btn btn-secondary btn-sm" onclick="forgotPin()">Forgot PIN?</button>
+            `;
+        }
+
+        function updatePinDisplay() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById('dot' + i);
+                if (i < pinInput.length) {
+                    dot.classList.add('filled');
+                    dot.classList.remove('error');
+                } else {
+                    dot.classList.remove('filled');
+                    dot.classList.remove('error');
+                }
+            }
+        }
+
+        function enterDigit(digit) {
+            if (pinInput.length < 4) {
+                pinInput += digit;
+                updatePinDisplay();
+            }
+            if (pinInput.length === 4) {
+                setTimeout(submitPin, 150);
+            }
+        }
+
+        function clearPin() {
+            pinInput = pinInput.slice(0, -1);
+            updatePinDisplay();
+            document.getElementById('pinErrorMsg').textContent = "";
+        }
+
+        function submitPin() {
+            if (pinInput.length !== 4) {
+                showPinError("Enter 4 digits");
+                return;
+            }
+            
+            if (pinInput === currentPin) {
+                unlockApp();
+            } else {
+                showPinError("Wrong PIN. Try again.");
+                pinInput = "";
+                updatePinDisplay();
+                for (let i = 0; i < 4; i++) {
+                    document.getElementById('dot' + i).classList.add('error');
+                }
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) {
+                        document.getElementById('dot' + i).classList.remove('error');
+                    }
+                }, 500);
+            }
+        }
+
+        function showPinError(msg) {
+            document.getElementById('pinErrorMsg').textContent = msg;
+        }
+
+        function unlockApp() {
+            document.getElementById('pinOverlay').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            isLocked = false;
+            renderStudents();
+            updateStats();
+            updateClassFilter();
+            updateQuickStudentSelect();
+            updateSyncStatus();
+        }
+
+        function lockApp() {
+            isLocked = true;
+            initPin();
+        }
+
+        function forgotPin() {
+            if (confirm("Reset PIN to default (0000)? All student data will be kept.")) {
+                currentPin = DEFAULT_PIN;
+                localStorage.setItem('pocketMoneyPIN', DEFAULT_PIN);
+                showPinError("PIN reset to 0000. Enter to unlock.");
+                pinInput = "";
+                updatePinDisplay();
+            }
+        }
+
+        // ===================== CHANGE PIN =====================
+        function openChangePinModal() {
+            changePinStep = 1;
+            changePinInput = "";
+            newPinTemp = "";
+            updateChangePinDisplay();
+            document.getElementById('changePinStep').textContent = "Enter your current 4-digit PIN";
+            document.getElementById('changePinError').textContent = "";
+            openModal('changePinModal');
+        }
+
+        function updateChangePinDisplay() {
+            let display = "";
+            for (let i = 0; i < 4; i++) {
+                display += (i < changePinInput.length) ? "● " : "_ ";
+            }
+            document.getElementById('changePinDisplay').textContent = display.trim();
+        }
+
+        function changePinEnterDigit(digit) {
+            if (changePinInput.length < 4) {
+                changePinInput += digit;
+                updateChangePinDisplay();
+            }
+            if (changePinInput.length === 4) {
+                setTimeout(changePinSubmit, 150);
+            }
+        }
+
+        function changePinClear() {
+            changePinInput = changePinInput.slice(0, -1);
+            updateChangePinDisplay();
+            document.getElementById('changePinError').textContent = "";
+        }
+
+        function changePinSubmit() {
+            if (changePinInput.length !== 4) {
+                document.getElementById('changePinError').textContent = "Enter 4 digits";
+                return;
+            }
+
+            if (changePinStep === 1) {
+                if (changePinInput === currentPin) {
+                    changePinStep = 2;
+                    changePinInput = "";
+                    newPinTemp = "";
+                    updateChangePinDisplay();
+                    document.getElementById('changePinStep').textContent = "Enter your NEW 4-digit PIN";
+                    document.getElementById('changePinError').textContent = "";
+                } else {
+                    document.getElementById('changePinError').textContent = "Wrong current PIN";
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                }
+            } else if (changePinStep === 2) {
+                if (changePinInput === currentPin) {
+                    document.getElementById('changePinError').textContent = "New PIN must be different from old PIN";
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                    return;
+                }
+                newPinTemp = changePinInput;
+                changePinStep = 3;
+                changePinInput = "";
+                updateChangePinDisplay();
+                document.getElementById('changePinStep').textContent = "Confirm your NEW 4-digit PIN";
+                document.getElementById('changePinError').textContent = "";
+            } else if (changePinStep === 3) {
+                if (changePinInput === newPinTemp) {
+                    currentPin = newPinTemp;
+                    localStorage.setItem('pocketMoneyPIN', currentPin);
+                    closeModal('changePinModal');
+                    showToast("PIN changed successfully!");
+                } else {
+                    document.getElementById('changePinError').textContent = "PINs do not match. Start over.";
+                    changePinStep = 1;
+                    changePinInput = "";
+                    newPinTemp = "";
+                    updateChangePinDisplay();
+                    document.getElementById('changePinStep').textContent = "Enter your current 4-digit PIN";
+                }
+            }
+        }
+
+        // ===================== DATA TRANSFER =====================
+        function openDataTransferModal() {
+            document.getElementById('pasteDataArea').value = "";
+            document.getElementById('copyFeedback').textContent = "";
+            document.getElementById('pasteFeedback').textContent = "";
+            openModal('dataTransferModal');
+        }
+
+        function copyDataToClipboard() {
+            const data = JSON.stringify(students, null, 2);
+            navigator.clipboard.writeText(data).then(() => {
+                document.getElementById('copyFeedback').textContent = "✅ Data copied! Now paste in the other browser.";
+                showToast("Data copied to clipboard!");
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = data;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                document.getElementById('copyFeedback').textContent = "✅ Data copied! Now paste in the other browser.";
+                showToast("Data copied to clipboard!");
+            });
+        }
+
+        function importFromText() {
+            const text = document.getElementById('pasteDataArea').value.trim();
+            const feedback = document.getElementById('pasteFeedback');
+            
+            if (!text) {
+                feedback.textContent = "Please paste data first";
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(text);
+                if (Array.isArray(data)) {
+                    if (confirm(`Import ${data.length} students? This will REPLACE all current data.`)) {
+                        students = data;
+                        saveData();
+                        closeModal('dataTransferModal');
+                        showToast(`Imported ${data.length} students successfully!`);
+                    }
+                } else {
+                    throw new Error('Invalid format');
+                }
+            } catch (err) {
+                feedback.textContent = "❌ Invalid data. Make sure you copied the full text.";
+            }
+        }
+
+        function updateSyncStatus() {
+            const status = document.getElementById('syncStatus');
+            if (students.length > 0) {
+                status.textContent = `⚠️ ${students.length} students - Browser Only`;
+                status.className = 'sync-status warning';
+            } else {
+                status.textContent = '⚠️ Browser Only';
+                status.className = 'sync-status warning';
+            }
+        }
+
+        // ===================== DATA MANAGEMENT =====================
+        let students = JSON.parse(localStorage.getItem('pocketMoneyStudents')) || [];
+        let currentHistoryId = null;
+
+        function saveData() {
+            localStorage.setItem('pocketMoneyStudents', JSON.stringify(students));
+            renderStudents();
+            updateStats();
+            updateClassFilter();
+            updateQuickStudentSelect();
+            updateSyncStatus();
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = type === 'error' ? 'var(--danger)' : 'var(--text)';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function formatUGX(amount) {
+            return 'UGX ' + amount.toLocaleString('en-UG');
+        }
+
+        // ===================== STUDENT MANAGEMENT =====================
+        function addStudent() {
+            const name = document.getElementById('newStudentName').value.trim();
+            const className = document.getElementById('newStudentClass').value;
+            const balance = parseInt(document.getElementById('newStudentBalance').value) || 0;
+
+            if (!name || !className) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const student = {
+                id: generateId(),
+                name,
+                class: className,
+                balance: balance,
+                history: []
+            };
+
+            students.push(student);
+            saveData();
+            
+            document.getElementById('newStudentName').value = '';
+            document.getElementById('newStudentClass').value = '';
+            document.getElementById('newStudentBalance').value = '0';
+            
+            closeModal('addStudentModal');
+            showToast(`Added ${name} successfully!`);
+        }
+
+        function deleteStudent(id) {
+            if (!confirm('Are you sure you want to remove this student?')) return;
+            students = students.filter(s => s.id !== id);
+            saveData();
+            showToast('Student removed');
+        }
+
+        function openEditModal(id) {
+            const student = students.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById('editStudentId').value = id;
+            document.getElementById('editStudentName').value = student.name;
+            document.getElementById('editStudentClass').value = student.class;
+            document.getElementById('editStudentBalance').value = student.balance;
+            
+            openModal('editModal');
+        }
+
+        function saveEdit() {
+            const id = document.getElementById('editStudentId').value;
+            const student = students.find(s => s.id === id);
+            
+            if (student) {
+                const oldBalance = student.balance;
+                student.name = document.getElementById('editStudentName').value.trim();
+                student.class = document.getElementById('editStudentClass').value;
+                student.balance = parseInt(document.getElementById('editStudentBalance').value) || 0;
+                
+                if (oldBalance !== student.balance) {
+                    student.history.unshift({
+                        date: new Date().toISOString(),
+                        type: 'adjustment',
+                        amount: student.balance - oldBalance,
+                        reason: 'Manual balance adjustment',
+                        balanceAfter: student.balance
+                    });
+                }
+                
+                saveData();
+                closeModal('editModal');
+                showToast('Student updated successfully');
+            }
+        }
+
+        // ===================== MONEY OPERATIONS =====================
+        function deductMoney() {
+            const studentId = document.getElementById('quickStudent').value;
+            const amount = parseInt(document.getElementById('deductAmount').value);
+            const reason = document.getElementById('deductReason').value.trim() || 'Deduction';
+
+            if (!studentId) {
+                showToast('Please select a student', 'error');
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            if (student.balance < amount) {
+                showToast('Insufficient balance!', 'error');
+                return;
+            }
+
+            student.balance -= amount;
+            student.history.unshift({
+                date: new Date().toISOString(),
+                type: 'deduction',
+                amount: -amount,
+                reason: reason,
+                balanceAfter: student.balance
+            });
+
+            saveData();
+            loadStudentBalance();
+            document.getElementById('deductAmount').value = '';
+            document.getElementById('deductReason').value = '';
+            showToast(`Deducted ${formatUGX(amount)} from ${student.name}`);
+        }
+
+        function addMoney() {
+            const studentId = document.getElementById('quickStudent').value;
+            const amount = parseInt(document.getElementById('addAmount').value);
+
+            if (!studentId) {
+                showToast('Please select a student', 'error');
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            student.balance += amount;
+            student.history.unshift({
+                date: new Date().toISOString(),
+                type: 'addition',
+                amount: amount,
+                reason: 'Added funds',
+                balanceAfter: student.balance
+            });
+
+            saveData();
+            loadStudentBalance();
+            document.getElementById('addAmount').value = '';
+            showToast(`Added ${formatUGX(amount)} to ${student.name}`);
+        }
+
+        function setAmount(amount) {
+            document.getElementById('deductAmount').value = amount;
+        }
+
+        function loadStudentBalance() {
+            const studentId = document.getElementById('quickStudent').value;
+            const balanceInput = document.getElementById('currentBalance');
+            
+            if (!studentId) {
+                balanceInput.value = 'UGX 0';
+                return;
+            }
+
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                balanceInput.value = formatUGX(student.balance);
+                balanceInput.style.color = student.balance >= 0 ? 'var(--success)' : 'var(--danger)';
+            }
+        }
+
+        // ===================== RENDERING =====================
+        function renderStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            const container = document.getElementById('studentsTable');
+
+            let filtered = students.filter(s => {
+                const matchesSearch = s.name.toLowerCase().includes(search) || 
+                                    s.class.toLowerCase().includes(search);
+                const matchesClass = !classFilter || s.class === classFilter;
+                return matchesSearch && matchesClass;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🔍</div>
+                        <h3>No students found</h3>
+                        <p>Try adjusting your search or filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Balance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            filtered.sort((a, b) => a.name.localeCompare(b.name)).forEach(student => {
+                const balanceClass = student.balance >= 0 ? 'positive' : 'negative';
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${escapeHtml(student.name)}</strong>
+                        </td>
+                        <td><span class="badge">${escapeHtml(student.class)}</span></td>
+                        <td class="balance ${balanceClass}">${formatUGX(student.balance)}</td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Edit</button>
+                                <button class="btn btn-secondary btn-sm" onclick="viewHistory('${student.id}')">History</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteStudent('${student.id}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function updateStats() {
+            document.getElementById('totalStudents').textContent = students.length;
+            const total = students.reduce((sum, s) => sum + s.balance, 0);
+            document.getElementById('totalBalance').textContent = formatUGX(total);
+            
+            const classes = [...new Set(students.map(s => s.class))];
+            document.getElementById('totalClasses').textContent = classes.length;
+        }
+
+        function updateClassFilter() {
+            const select = document.getElementById('classFilter');
+            const currentValue = select.value;
+            const classes = [...new Set(students.map(s => s.class))].sort();
+            
+            select.innerHTML = '<option value="">All Classes</option>';
+            classes.forEach(c => {
+                select.innerHTML += `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`;
+            });
+            
+            select.value = currentValue;
+        }
+
+        function updateQuickStudentSelect() {
+            const select = document.getElementById('quickStudent');
+            const currentValue = select.value;
+            
+            select.innerHTML = '<option value="">-- Choose Student --</option>';
+            students.sort((a, b) => a.name.localeCompare(b.name)).forEach(s => {
+                select.innerHTML += `<option value="${s.id}">${escapeHtml(s.name)} (${escapeHtml(s.class)})</option>`;
+            });
+            
+            if (students.find(s => s.id === currentValue)) {
+                select.value = currentValue;
+                loadStudentBalance();
+            }
+        }
+
+        function resetFilter() {
+            document.getElementById('classFilter').value = '';
+            document.getElementById('searchInput').value = '';
+            renderStudents();
+        }
+
+        // ===================== HISTORY =====================
+        function viewHistory(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            currentHistoryId = studentId;
+            const container = document.getElementById('historyContent');
+            
+            if (!student.history || student.history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📋</div>
+                        <p>No transactions yet</p>
+                    </div>
+                `;
+            } else {
+                let html = `<div class="history-list">`;
+                student.history.forEach(h => {
+                    const date = new Date(h.date).toLocaleString('en-UG');
+                    const amountClass = h.amount >= 0 ? 'positive' : 'negative';
+                    const sign = h.amount >= 0 ? '+' : '';
+                    html += `
+                        <div class="history-item">
+                            <div>
+                                <div><strong>${escapeHtml(h.reason)}</strong></div>
+                                <div class="date">${date}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="amount ${amountClass}">${sign}${formatUGX(Math.abs(h.amount))}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-light);">Bal: ${formatUGX(h.balanceAfter)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            }
+            
+            openModal('historyModal');
+        }
+
+        // ===================== IMPORT/EXPORT =====================
+        function exportData() {
+            const dataStr = JSON.stringify(students, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pocket-money-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Data exported successfully');
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (Array.isArray(data)) {
+                        if (confirm(`Import ${data.length} students? This will replace current data.`)) {
+                            students = data;
+                            saveData();
+                            showToast('Data imported successfully');
+                        }
+                    } else {
+                        throw new Error('Invalid format');
+                    }
+                } catch (err) {
+                    showToast('Invalid file format', 'error');
+                }
+                input.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // ===================== MODALS =====================
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ===================== INIT =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initPin();
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Money Tracker - UGX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
         input, select {
             width: 100%;
             padding: 10px 12px;
