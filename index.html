@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pocket Money Tracker</title>
+    <title>Pocket Money Tracker - UGX</title>
     <style>
         * {
             margin: 0;
@@ -405,7 +405,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .toast {
@@ -477,115 +477,299 @@
             .no-print { display: none !important; }
             .card { box-shadow: none; border: 1px solid #ddd; }
         }
+
+        /* ===== PIN LOCK SCREEN ===== */
+        .pin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .pin-overlay.hidden {
+            display: none !important;
+        }
+
+        .pin-box {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 360px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .pin-box h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .pin-box p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .pin-dot.filled {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .pin-dot.error {
+            background: var(--danger);
+            border-color: var(--danger);
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pin-key {
+            padding: 18px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .pin-key:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .pin-key:active {
+            transform: scale(0.95);
+        }
+
+        .pin-key.wide {
+            grid-column: span 2;
+        }
+
+        .pin-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .pin-actions .btn {
+            font-size: 0.85rem;
+            padding: 8px 16px;
+        }
+
+        .pin-error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* Change PIN modal specific */
+        .pin-setup-display {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin: 15px 0;
+            min-height: 40px;
+            color: var(--primary);
+        }
+
+        .pin-step-info {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
     </style>
 <base target="_blank">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>💰 Pocket Money Tracker (UGX)</h1>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-secondary btn-sm no-print" onclick="exportData()">📥 Export</button>
-                <div class="file-input-wrapper btn btn-secondary btn-sm no-print">
-                    📤 Import
-                    <input type="file" id="importFile" accept=".json" onchange="importData(this)">
-                </div>
-                <button class="btn btn-primary btn-sm no-print" onclick="openModal('addStudentModal')">+ Add Student</button>
+    <!-- ===== PIN LOCK SCREEN ===== -->
+    <div class="pin-overlay" id="pinOverlay">
+        <div class="pin-box">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">🔒</div>
+            <h2 id="pinTitle">Enter PIN</h2>
+            <p id="pinSubtitle">Unlock your Pocket Money Tracker</p>
+
+            <div class="pin-display" id="pinDisplay">
+                <div class="pin-dot" id="dot0"></div>
+                <div class="pin-dot" id="dot1"></div>
+                <div class="pin-dot" id="dot2"></div>
+                <div class="pin-dot" id="dot3"></div>
             </div>
+
+            <div class="pin-pad" id="pinPad">
+                <button class="pin-key" onclick="enterDigit(1)">1</button>
+                <button class="pin-key" onclick="enterDigit(2)">2</button>
+                <button class="pin-key" onclick="enterDigit(3)">3</button>
+                <button class="pin-key" onclick="enterDigit(4)">4</button>
+                <button class="pin-key" onclick="enterDigit(5)">5</button>
+                <button class="pin-key" onclick="enterDigit(6)">6</button>
+                <button class="pin-key" onclick="enterDigit(7)">7</button>
+                <button class="pin-key" onclick="enterDigit(8)">8</button>
+                <button class="pin-key" onclick="enterDigit(9)">9</button>
+                <button class="pin-key" onclick="clearPin()">⌫</button>
+                <button class="pin-key" onclick="enterDigit(0)">0</button>
+                <button class="pin-key" onclick="submitPin()">✓</button>
+            </div>
+
+            <div class="pin-actions" id="pinActions">
+                <button class="btn btn-secondary btn-sm" onclick="forgotPin()">Forgot PIN?</button>
+            </div>
+
+            <div class="pin-error-msg" id="pinErrorMsg"></div>
         </div>
-    </header>
+    </div>
 
-    <div class="container">
-        <div class="stats">
-            <div class="stat-card">
-                <h3>Total Students</h3>
-                <div class="value" id="totalStudents">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Balance</h3>
-                <div class="value" id="totalBalance">UGX 0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Classes</h3>
-                <div class="value" id="totalClasses">0</div>
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="sidebar no-print">
-                <div class="card">
-                    <h2>⚡ Quick Actions</h2>
-
-                    <div class="form-group">
-                        <label>Select Student</label>
-                        <select id="quickStudent" onchange="loadStudentBalance()">
-                            <option value="">-- Choose Student --</option>
-                        </select>
+    <!-- ===== MAIN APP ===== -->
+    <div id="mainApp" class="hidden">
+        <header>
+            <div class="header-content">
+                <h1>💰 Pocket Money Tracker (UGX)</h1>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-secondary btn-sm no-print" onclick="exportData()">📥 Export</button>
+                    <div class="file-input-wrapper btn btn-secondary btn-sm no-print">
+                        📤 Import
+                        <input type="file" id="importFile" accept=".json" onchange="importData(this)">
                     </div>
-
-                    <div class="form-group">
-                        <label>Current Balance</label>
-                        <input type="text" id="currentBalance" readonly style="font-weight: 700; font-size: 1.2rem; text-align: center;">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Deduct Amount (UGX)</label>
-                        <input type="number" id="deductAmount" placeholder="0" step="100" min="0">
-                        <div class="quick-deduct">
-                            <button class="quick-btn" onclick="setAmount(1000)">1K</button>
-                            <button class="quick-btn" onclick="setAmount(5000)">5K</button>
-                            <button class="quick-btn" onclick="setAmount(10000)">10K</button>
-                            <button class="quick-btn" onclick="setAmount(20000)">20K</button>
-                            <button class="quick-btn" onclick="setAmount(50000)">50K</button>
-                            <button class="quick-btn" onclick="setAmount(100000)">100K</button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Reason (Optional)</label>
-                        <input type="text" id="deductReason" placeholder="e.g., Stationery, Trip fee, Lunch...">
-                    </div>
-
-                    <button class="btn btn-danger" style="width: 100%;" onclick="deductMoney()">
-                        💸 Deduct Balance
-                    </button>
-
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Add Money (UGX)</label>
-                        <input type="number" id="addAmount" placeholder="0" step="100" min="0">
-                    </div>
-                    <button class="btn btn-success" style="width: 100%;" onclick="addMoney()">
-                        ➕ Add to Balance
-                    </button>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="openChangePinModal()">🔐 Change PIN</button>
+                    <button class="btn btn-primary btn-sm no-print" onclick="openModal('addStudentModal')">+ Add Student</button>
                 </div>
+            </div>
+        </header>
 
-                <div class="card" style="margin-top: 20px;">
-                    <h2>📊 Class Filter</h2>
-                    <div class="form-group">
-                        <select id="classFilter" onchange="renderStudents()">
-                            <option value="">All Classes</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="resetFilter()">
-                        Show All
-                    </button>
+        <div class="container">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Students</h3>
+                    <div class="value" id="totalStudents">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Balance</h3>
+                    <div class="value" id="totalBalance">UGX 0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Classes</h3>
+                    <div class="value" id="totalClasses">0</div>
                 </div>
             </div>
 
-            <div class="main-content">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                        <h2>👨‍🎓 Students</h2>
-                        <div class="search-box" style="flex: 1; max-width: 300px;">
-                            <input type="text" id="searchInput" placeholder="Search students..." oninput="renderStudents()">
+            <div class="grid">
+                <div class="sidebar no-print">
+                    <div class="card">
+                        <h2>⚡ Quick Actions</h2>
+
+                        <div class="form-group">
+                            <label>Select Student</label>
+                            <select id="quickStudent" onchange="loadStudentBalance()">
+                                <option value="">-- Choose Student --</option>
+                            </select>
                         </div>
+
+                        <div class="form-group">
+                            <label>Current Balance</label>
+                            <input type="text" id="currentBalance" readonly style="font-weight: 700; font-size: 1.2rem; text-align: center;">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Deduct Amount (UGX)</label>
+                            <input type="number" id="deductAmount" placeholder="0" step="100" min="0">
+                            <div class="quick-deduct">
+                                <button class="quick-btn" onclick="setAmount(1000)">1K</button>
+                                <button class="quick-btn" onclick="setAmount(5000)">5K</button>
+                                <button class="quick-btn" onclick="setAmount(10000)">10K</button>
+                                <button class="quick-btn" onclick="setAmount(20000)">20K</button>
+                                <button class="quick-btn" onclick="setAmount(50000)">50K</button>
+                                <button class="quick-btn" onclick="setAmount(100000)">100K</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reason (Optional)</label>
+                            <input type="text" id="deductReason" placeholder="e.g., Stationery, Trip fee, Lunch...">
+                        </div>
+
+                        <button class="btn btn-danger" style="width: 100%;" onclick="deductMoney()">
+                            💸 Deduct Balance
+                        </button>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Add Money (UGX)</label>
+                            <input type="number" id="addAmount" placeholder="0" step="100" min="0">
+                        </div>
+                        <button class="btn btn-success" style="width: 100%;" onclick="addMoney()">
+                            ➕ Add to Balance
+                        </button>
                     </div>
 
-                    <div id="studentsTable">
-                        <div class="empty-state">
-                            <div class="icon">📚</div>
-                            <h3>No students yet</h3>
-                            <p>Add your first student to get started</p>
+                    <div class="card" style="margin-top: 20px;">
+                        <h2>📊 Class Filter</h2>
+                        <div class="form-group">
+                            <select id="classFilter" onchange="renderStudents()">
+                                <option value="">All Classes</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="resetFilter()">
+                            Show All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                            <h2>👨‍🎓 Students</h2>
+                            <div class="search-box" style="flex: 1; max-width: 300px;">
+                                <input type="text" id="searchInput" placeholder="Search students..." oninput="renderStudents()">
+                            </div>
+                        </div>
+
+                        <div id="studentsTable">
+                            <div class="empty-state">
+                                <div class="icon">📚</div>
+                                <h3>No students yet</h3>
+                                <p>Add your first student to get started</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -680,22 +864,246 @@
         </div>
     </div>
 
+    <!-- Change PIN Modal -->
+    <div class="modal" id="changePinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔐 Change PIN</h2>
+                <button class="close-btn" onclick="closeModal('changePinModal')">&times;</button>
+            </div>
+
+            <div class="pin-step-info" id="changePinStep">Enter your current 4-digit PIN</div>
+            <div class="pin-setup-display" id="changePinDisplay">_ _ _ _</div>
+
+            <div class="pin-pad" id="changePinPad">
+                <button class="pin-key" onclick="changePinEnterDigit(1)">1</button>
+                <button class="pin-key" onclick="changePinEnterDigit(2)">2</button>
+                <button class="pin-key" onclick="changePinEnterDigit(3)">3</button>
+                <button class="pin-key" onclick="changePinEnterDigit(4)">4</button>
+                <button class="pin-key" onclick="changePinEnterDigit(5)">5</button>
+                <button class="pin-key" onclick="changePinEnterDigit(6)">6</button>
+                <button class="pin-key" onclick="changePinEnterDigit(7)">7</button>
+                <button class="pin-key" onclick="changePinEnterDigit(8)">8</button>
+                <button class="pin-key" onclick="changePinEnterDigit(9)">9</button>
+                <button class="pin-key" onclick="changePinClear()">⌫</button>
+                <button class="pin-key" onclick="changePinEnterDigit(0)">0</button>
+                <button class="pin-key" onclick="changePinSubmit()">✓</button>
+            </div>
+
+            <div class="pin-error-msg" id="changePinError" style="text-align: center;"></div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
-        // Data Management
-        let students = JSON.parse(localStorage.getItem('pocketMoneyStudents')) || [];
-        let currentHistoryId = null;
+        // ===================== PIN SYSTEM =====================
+        const DEFAULT_PIN = "0000";
+        let currentPin = localStorage.getItem('pocketMoneyPIN') || DEFAULT_PIN;
+        let pinInput = "";
+        let changePinInput = "";
+        let changePinStep = 1; // 1=current, 2=new, 3=confirm
+        let newPinTemp = "";
+        let isLocked = true;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        function initPin() {
+            // Check if PIN is set; if not, default to 0000
+            if (!localStorage.getItem('pocketMoneyPIN')) {
+                localStorage.setItem('pocketMoneyPIN', DEFAULT_PIN);
+                currentPin = DEFAULT_PIN;
+            }
+
+            // Show lock screen
+            document.getElementById('pinOverlay').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            resetPinInput();
+        }
+
+        function resetPinInput() {
+            pinInput = "";
+            updatePinDisplay();
+            document.getElementById('pinErrorMsg').textContent = "";
+            document.getElementById('pinTitle').textContent = "Enter PIN";
+            document.getElementById('pinSubtitle').textContent = "Unlock your Pocket Money Tracker";
+            document.getElementById('pinActions').innerHTML = `
+                <button class="btn btn-secondary btn-sm" onclick="forgotPin()">Forgot PIN?</button>
+            `;
+        }
+
+        function updatePinDisplay() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById('dot' + i);
+                if (i < pinInput.length) {
+                    dot.classList.add('filled');
+                    dot.classList.remove('error');
+                } else {
+                    dot.classList.remove('filled');
+                    dot.classList.remove('error');
+                }
+            }
+        }
+
+        function enterDigit(digit) {
+            if (pinInput.length < 4) {
+                pinInput += digit;
+                updatePinDisplay();
+            }
+            if (pinInput.length === 4) {
+                setTimeout(submitPin, 150);
+            }
+        }
+
+        function clearPin() {
+            pinInput = pinInput.slice(0, -1);
+            updatePinDisplay();
+            document.getElementById('pinErrorMsg').textContent = "";
+        }
+
+        function submitPin() {
+            if (pinInput.length !== 4) {
+                showPinError("Enter 4 digits");
+                return;
+            }
+
+            if (pinInput === currentPin) {
+                unlockApp();
+            } else {
+                showPinError("Wrong PIN. Try again.");
+                pinInput = "";
+                updatePinDisplay();
+                // Shake animation
+                for (let i = 0; i < 4; i++) {
+                    document.getElementById('dot' + i).classList.add('error');
+                }
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) {
+                        document.getElementById('dot' + i).classList.remove('error');
+                    }
+                }, 500);
+            }
+        }
+
+        function showPinError(msg) {
+            document.getElementById('pinErrorMsg').textContent = msg;
+        }
+
+        function unlockApp() {
+            document.getElementById('pinOverlay').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            isLocked = false;
+            // Initialize app
             renderStudents();
             updateStats();
             updateClassFilter();
             updateQuickStudentSelect();
-        });
+        }
 
-        // Core Functions
+        function lockApp() {
+            isLocked = true;
+            initPin();
+        }
+
+        function forgotPin() {
+            if (confirm("Reset PIN to default (0000)? All student data will be kept.")) {
+                currentPin = DEFAULT_PIN;
+                localStorage.setItem('pocketMoneyPIN', DEFAULT_PIN);
+                showPinError("PIN reset to 0000. Enter to unlock.");
+                pinInput = "";
+                updatePinDisplay();
+            }
+        }
+
+        // ===================== CHANGE PIN =====================
+        function openChangePinModal() {
+            changePinStep = 1;
+            changePinInput = "";
+            newPinTemp = "";
+            updateChangePinDisplay();
+            document.getElementById('changePinStep').textContent = "Enter your current 4-digit PIN";
+            document.getElementById('changePinError').textContent = "";
+            openModal('changePinModal');
+        }
+
+        function updateChangePinDisplay() {
+            let display = "";
+            for (let i = 0; i < 4; i++) {
+                display += (i < changePinInput.length) ? "● " : "_ ";
+            }
+            document.getElementById('changePinDisplay').textContent = display.trim();
+        }
+
+        function changePinEnterDigit(digit) {
+            if (changePinInput.length < 4) {
+                changePinInput += digit;
+                updateChangePinDisplay();
+            }
+            if (changePinInput.length === 4) {
+                setTimeout(changePinSubmit, 150);
+            }
+        }
+
+        function changePinClear() {
+            changePinInput = changePinInput.slice(0, -1);
+            updateChangePinDisplay();
+            document.getElementById('changePinError').textContent = "";
+        }
+
+        function changePinSubmit() {
+            if (changePinInput.length !== 4) {
+                document.getElementById('changePinError').textContent = "Enter 4 digits";
+                return;
+            }
+
+            if (changePinStep === 1) {
+                // Verify current PIN
+                if (changePinInput === currentPin) {
+                    changePinStep = 2;
+                    changePinInput = "";
+                    newPinTemp = "";
+                    updateChangePinDisplay();
+                    document.getElementById('changePinStep').textContent = "Enter your NEW 4-digit PIN";
+                    document.getElementById('changePinError').textContent = "";
+                } else {
+                    document.getElementById('changePinError').textContent = "Wrong current PIN";
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                }
+            } else if (changePinStep === 2) {
+                // Set new PIN
+                if (changePinInput === currentPin) {
+                    document.getElementById('changePinError').textContent = "New PIN must be different from old PIN";
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                    return;
+                }
+                newPinTemp = changePinInput;
+                changePinStep = 3;
+                changePinInput = "";
+                updateChangePinDisplay();
+                document.getElementById('changePinStep').textContent = "Confirm your NEW 4-digit PIN";
+                document.getElementById('changePinError').textContent = "";
+            } else if (changePinStep === 3) {
+                // Confirm new PIN
+                if (changePinInput === newPinTemp) {
+                    currentPin = newPinTemp;
+                    localStorage.setItem('pocketMoneyPIN', currentPin);
+                    closeModal('changePinModal');
+                    showToast("PIN changed successfully!");
+                } else {
+                    document.getElementById('changePinError').textContent = "PINs do not match. Start over.";
+                    changePinStep = 1;
+                    changePinInput = "";
+                    newPinTemp = "";
+                    updateChangePinDisplay();
+                    document.getElementById('changePinStep').textContent = "Enter your current 4-digit PIN";
+                }
+            }
+        }
+
+        // ===================== DATA MANAGEMENT =====================
+        let students = JSON.parse(localStorage.getItem('pocketMoneyStudents')) || [];
+        let currentHistoryId = null;
+
         function saveData() {
             localStorage.setItem('pocketMoneyStudents', JSON.stringify(students));
             renderStudents();
@@ -720,7 +1128,7 @@
             return 'UGX ' + amount.toLocaleString('en-UG');
         }
 
-        // Student Management
+        // ===================== STUDENT MANAGEMENT =====================
         function addStudent() {
             const name = document.getElementById('newStudentName').value.trim();
             const className = document.getElementById('newStudentClass').value;
@@ -795,7 +1203,7 @@
             }
         }
 
-        // Money Operations
+        // ===================== MONEY OPERATIONS =====================
         function deductMoney() {
             const studentId = document.getElementById('quickStudent').value;
             const amount = parseInt(document.getElementById('deductAmount').value);
@@ -887,7 +1295,7 @@
             }
         }
 
-        // Rendering
+        // ===================== RENDERING =====================
         function renderStudents() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             const classFilter = document.getElementById('classFilter').value;
@@ -991,7 +1399,7 @@
             renderStudents();
         }
 
-        // History
+        // ===================== HISTORY =====================
         function viewHistory(studentId) {
             const student = students.find(s => s.id === studentId);
             if (!student) return;
@@ -1032,7 +1440,7 @@
             openModal('historyModal');
         }
 
-        // Import/Export
+        // ===================== IMPORT/EXPORT =====================
         function exportData() {
             const dataStr = JSON.stringify(students, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
@@ -1070,7 +1478,7 @@
             reader.readAsText(file);
         }
 
-        // Utilities
+        // ===================== MODALS =====================
         function openModal(id) {
             document.getElementById(id).classList.add('active');
         }
@@ -1097,6 +1505,11 @@
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
             }
+        });
+
+        // ===================== INIT =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initPin();
         });
     </script>
 </body>
