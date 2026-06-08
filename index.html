@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pocket Money Tracker</title>
     <style>
         * {
@@ -12,6 +12,7 @@
         }
 
         :root {
+            --dark-bg:#0f172a;--dark-card:#1e293b;--dark-text:#f1f5f9;
             --primary: #4f46e5;
             --primary-dark: #4338ca;
             --success: #10b981;
@@ -24,6 +25,7 @@
             --border: #e2e8f0;
         }
 
+        html,body{overflow-x:hidden; width:100%;}
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg);
@@ -620,7 +622,105 @@
             color: var(--text-light);
             margin-bottom: 15px;
         }
-    </style>
+    
+body.dark-mode{
+--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--text-light:#cbd5e1;--border:#334155;
+}
+
+/* ===== SEARCHABLE DROPDOWN ===== */
+.searchable-select {
+    position: relative;
+    width: 100%;
+}
+.searchable-select input {
+    width: 100%;
+    cursor: pointer;
+}
+.searchable-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+.searchable-dropdown.active {
+    display: block;
+}
+.dropdown-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    transition: background 0.15s;
+}
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+.dropdown-item:hover, .dropdown-item.highlighted {
+    background: var(--primary);
+    color: white;
+}
+.dropdown-item .student-class {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+.dropdown-empty {
+    padding: 15px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+.dropdown-selected {
+    background: rgba(79, 70, 229, 0.1) !important;
+    color: var(--primary) !important;
+    font-weight: 600;
+}
+
+/* ===== MOBILE STABILITY FIXES ===== */
+html, body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+#pinOverlay, #mainApp {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+.pin-box {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.pin-key {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+#quickStudentSearch {
+    cursor: text;
+}
+
+@media(max-width:768px){
+.container{padding:10px;}
+.header-content{flex-direction:column;align-items:stretch;}
+.actions{flex-wrap:wrap;}
+table{display:block;overflow-x:auto;}
+.pin-box,.modal-content{max-width:95vw;}
+.searchable-dropdown {
+    max-height: 180px;
+}
+}
+</style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -639,18 +739,18 @@
             </div>
 
             <div class="pin-pad" id="pinPad">
-                <button class="pin-key" onclick="enterDigit(1)">1</button>
-                <button class="pin-key" onclick="enterDigit(2)">2</button>
-                <button class="pin-key" onclick="enterDigit(3)">3</button>
-                <button class="pin-key" onclick="enterDigit(4)">4</button>
-                <button class="pin-key" onclick="enterDigit(5)">5</button>
-                <button class="pin-key" onclick="enterDigit(6)">6</button>
-                <button class="pin-key" onclick="enterDigit(7)">7</button>
-                <button class="pin-key" onclick="enterDigit(8)">8</button>
-                <button class="pin-key" onclick="enterDigit(9)">9</button>
-                <button class="pin-key" onclick="clearPin()">⌫</button>
-                <button class="pin-key" onclick="enterDigit(0)">0</button>
-                <button class="pin-key" onclick="submitPin()">✓</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(1)" onclick="enterDigit(1)">1</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(2)" onclick="enterDigit(2)">2</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(3)" onclick="enterDigit(3)">3</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(4)" onclick="enterDigit(4)">4</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(5)" onclick="enterDigit(5)">5</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(6)" onclick="enterDigit(6)">6</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(7)" onclick="enterDigit(7)">7</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(8)" onclick="enterDigit(8)">8</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(9)" onclick="enterDigit(9)">9</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();clearPin()" onclick="clearPin()">⌫</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(0)" onclick="enterDigit(0)">0</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();submitPin()" onclick="submitPin()">✓</button>
             </div>
 
             <div class="pin-actions" id="pinActions">
@@ -662,7 +762,7 @@
     </div>
 
     <!-- ===== MAIN APP ===== -->
-    <div id="mainApp" class="hidden">
+    <div id="mainApp" class="hidden" style="display:none;">
         <header>
             <div class="header-content">
                 <h1>💰 Pocket Money Tracker (UGX)</h1>
@@ -672,7 +772,7 @@
                         📤 Import
                         <input type="file" id="importFile" accept=".json" onchange="importData(this)">
                     </div>
-                    <button class="btn btn-secondary btn-sm no-print" onclick="openChangePinModal()">🔐 Change PIN</button>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="toggleDarkMode()">🌙 Dark Mode</button><button class="btn btn-secondary btn-sm no-print" onclick="openChangePinModal()">🔐 Change PIN</button>
                     <button class="btn btn-primary btn-sm no-print" onclick="openModal('addStudentModal')">+ Add Student</button>
                 </div>
             </div>
@@ -699,11 +799,14 @@
                     <div class="card">
                         <h2>⚡ Quick Actions</h2>
 
-                        <div class="form-group">
-                            <label>Select Student</label>
-                            <select id="quickStudent" onchange="loadStudentBalance()">
-                                <option value="">-- Choose Student --</option>
-                            </select>
+                        
+<div class="form-group">
+                            <label>Search & Select Student</label>
+                            <div class="searchable-select" id="quickStudentContainer">
+                                <input type="text" id="quickStudentSearch" placeholder="Type to search students..." oninput="filterQuickStudentSearch(this.value)" onclick="showQuickStudentDropdown()" autocomplete="off">
+                                <div class="searchable-dropdown" id="quickStudentDropdown"></div>
+                                <input type="hidden" id="quickStudent" value="">
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -876,18 +979,18 @@
             <div class="pin-setup-display" id="changePinDisplay">_ _ _ _</div>
 
             <div class="pin-pad" id="changePinPad">
-                <button class="pin-key" onclick="changePinEnterDigit(1)">1</button>
-                <button class="pin-key" onclick="changePinEnterDigit(2)">2</button>
-                <button class="pin-key" onclick="changePinEnterDigit(3)">3</button>
-                <button class="pin-key" onclick="changePinEnterDigit(4)">4</button>
-                <button class="pin-key" onclick="changePinEnterDigit(5)">5</button>
-                <button class="pin-key" onclick="changePinEnterDigit(6)">6</button>
-                <button class="pin-key" onclick="changePinEnterDigit(7)">7</button>
-                <button class="pin-key" onclick="changePinEnterDigit(8)">8</button>
-                <button class="pin-key" onclick="changePinEnterDigit(9)">9</button>
-                <button class="pin-key" onclick="changePinClear()">⌫</button>
-                <button class="pin-key" onclick="changePinEnterDigit(0)">0</button>
-                <button class="pin-key" onclick="changePinSubmit()">✓</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(1)" onclick="changePinEnterDigit(1)">1</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(2)" onclick="changePinEnterDigit(2)">2</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(3)" onclick="changePinEnterDigit(3)">3</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(4)" onclick="changePinEnterDigit(4)">4</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(5)" onclick="changePinEnterDigit(5)">5</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(6)" onclick="changePinEnterDigit(6)">6</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(7)" onclick="changePinEnterDigit(7)">7</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(8)" onclick="changePinEnterDigit(8)">8</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(9)" onclick="changePinEnterDigit(9)">9</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinClear()" onclick="changePinClear()">⌫</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinEnterDigit(0)" onclick="changePinEnterDigit(0)">0</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();changePinSubmit()" onclick="changePinSubmit()">✓</button>
             </div>
 
             <div class="pin-error-msg" id="changePinError" style="text-align: center;"></div>
@@ -913,10 +1016,20 @@
                 currentPin = DEFAULT_PIN;
             }
 
-            // Show lock screen
-            document.getElementById('pinOverlay').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
+            // Show lock screen, hide main app
+            const overlay = document.getElementById('pinOverlay');
+            const mainApp = document.getElementById('mainApp');
+            overlay.classList.remove('hidden');
+            overlay.style.opacity = '1';
+            mainApp.classList.add('hidden');
+            mainApp.style.display = 'none';
             resetPinInput();
+
+            // Prevent body scroll while locked
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.height = '100%';
         }
 
         function resetPinInput() {
@@ -988,14 +1101,33 @@
         }
 
         function unlockApp() {
-            document.getElementById('pinOverlay').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            isLocked = false;
-            // Initialize app
-            renderStudents();
-            updateStats();
-            updateClassFilter();
-            updateQuickStudentSelect();
+            // Force reflow before hiding to prevent mobile jitter
+            const overlay = document.getElementById('pinOverlay');
+            const mainApp = document.getElementById('mainApp');
+
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.2s ease';
+
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                overlay.style.opacity = '';
+                overlay.style.transition = '';
+                mainApp.classList.remove('hidden');
+                mainApp.style.display = 'block';
+                // Restore body scroll
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                // Force layout recalculation
+                void mainApp.offsetHeight;
+                isLocked = false;
+                // Initialize app
+                renderStudents();
+                updateStats();
+                updateClassFilter();
+                updateQuickStudentSelect();
+            }, 200);
         }
 
         function lockApp() {
@@ -1507,7 +1639,123 @@
             }
         });
 
-        // ===================== INIT =====================
+        
+// ===== SEARCHABLE QUICK STUDENT SELECT =====
+let highlightedIndex = -1;
+
+function showQuickStudentDropdown() {
+    const dropdown = document.getElementById('quickStudentDropdown');
+    dropdown.classList.add('active');
+    filterQuickStudentSearch(document.getElementById('quickStudentSearch').value);
+}
+
+function hideQuickStudentDropdown() {
+    setTimeout(() => {
+        document.getElementById('quickStudentDropdown').classList.remove('active');
+    }, 200);
+}
+
+function filterQuickStudentSearch(term) {
+    const dropdown = document.getElementById('quickStudentDropdown');
+    const currentId = document.getElementById('quickStudent').value;
+    term = term.toLowerCase().trim();
+
+    let filtered = students.filter(s => {
+        return s.name.toLowerCase().includes(term) || s.class.toLowerCase().includes(term);
+    }).sort((a, b) => a.name.localeCompare(b.name));
+
+    if (filtered.length === 0) {
+        dropdown.innerHTML = '<div class="dropdown-empty">No students found</div>';
+    } else {
+        dropdown.innerHTML = filtered.map((s, idx) => {
+            const selectedClass = s.id === currentId ? 'dropdown-selected' : '';
+            return `<div class="dropdown-item ${selectedClass}" data-id="${s.id}" data-idx="${idx}" onclick="selectQuickStudent('${s.id}', '${escapeHtml(s.name)} (${escapeHtml(s.class)})')">
+                <div>${escapeHtml(s.name)}</div>
+                <div class="student-class">${escapeHtml(s.class)} — ${formatUGX(s.balance)}</div>
+            </div>`;
+        }).join('');
+    }
+    highlightedIndex = -1;
+}
+
+function selectQuickStudent(id, displayText) {
+    document.getElementById('quickStudent').value = id;
+    document.getElementById('quickStudentSearch').value = displayText;
+    document.getElementById('quickStudentDropdown').classList.remove('active');
+    loadStudentBalance();
+}
+
+// Keyboard navigation for dropdown
+document.addEventListener('click', function(e) {
+    const container = document.getElementById('quickStudentContainer');
+    if (container && !container.contains(e.target)) {
+        document.getElementById('quickStudentDropdown').classList.remove('active');
+    }
+});
+
+document.getElementById('quickStudentSearch').addEventListener('keydown', function(e) {
+    const dropdown = document.getElementById('quickStudentDropdown');
+    if (!dropdown.classList.contains('active')) return;
+
+    const items = dropdown.querySelectorAll('.dropdown-item');
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        highlightedIndex = Math.min(highlightedIndex + 1, items.length - 1);
+        updateHighlight(items);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlightedIndex = Math.max(highlightedIndex - 1, 0);
+        updateHighlight(items);
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (highlightedIndex >= 0 && items[highlightedIndex]) {
+            items[highlightedIndex].click();
+        }
+    } else if (e.key === 'Escape') {
+        dropdown.classList.remove('active');
+    }
+});
+
+function updateHighlight(items) {
+    items.forEach((item, idx) => {
+        if (idx === highlightedIndex) {
+            item.classList.add('highlighted');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('highlighted');
+        }
+    });
+}
+
+function updateQuickStudentSelect() {
+    const currentId = document.getElementById('quickStudent').value;
+    const searchInput = document.getElementById('quickStudentSearch');
+
+    if (currentId) {
+        const student = students.find(s => s.id === currentId);
+        if (student) {
+            searchInput.value = `${escapeHtml(student.name)} (${escapeHtml(student.class)})`;
+        } else {
+            searchInput.value = '';
+            document.getElementById('quickStudent').value = '';
+        }
+    } else {
+        searchInput.value = '';
+    }
+    loadStudentBalance();
+}
+
+function toggleDarkMode(){
+ document.body.classList.toggle('dark-mode');
+ localStorage.setItem('pm_dark',document.body.classList.contains('dark-mode'));
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ if(localStorage.getItem('pm_dark')==='true') document.body.classList.add('dark-mode');
+});
+
+// ===================== INIT =====================
         document.addEventListener('DOMContentLoaded', function() {
             initPin();
         });
