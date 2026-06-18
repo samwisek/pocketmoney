@@ -897,7 +897,7 @@ table{display:block;overflow-x:auto;}
                             <input type="text" id="deductReason" placeholder="e.g., Stationery, Trip fee, Lunch...">
                         </div>
 
-                        <button class="btn btn-danger" style="width: 100%;" onclick="deductMoney()">
+                        <button class="btn btn-danger" style="width: 100%;" onclick="deductMoney()" id="deductBtn">
                             💸 Deduct Balance
                         </button>
 
@@ -905,7 +905,7 @@ table{display:block;overflow-x:auto;}
                             <label>Add Money (UGX)</label>
                             <input type="number" id="addAmount" placeholder="0" step="100" min="0">
                         </div>
-                        <button class="btn btn-success" style="width: 100%;" onclick="addMoney()">
+                        <button class="btn btn-success" style="width: 100%;" onclick="addMoney()" id="addMoneyBtn">
                             ➕ Add to Balance
                         </button>
                     </div>
@@ -976,7 +976,7 @@ table{display:block;overflow-x:auto;}
                 <input type="number" id="newStudentBalance" value="0" step="100" min="0">
             </div>
 
-            <button class="btn btn-primary" style="width: 100%;" onclick="addStudent()">
+            <button class="btn btn-primary" style="width: 100%;" onclick="addStudent()" id="addStudentBtn">
                 Add Student
             </button>
         </div>
@@ -1026,7 +1026,7 @@ table{display:block;overflow-x:auto;}
                 <input type="number" id="editStudentBalance" step="100">
             </div>
 
-            <button class="btn btn-primary" style="width: 100%;" onclick="saveEdit()">
+            <button class="btn btn-primary" style="width: 100%;" onclick="saveEdit()" id="saveEditBtn">
                 Save Changes
             </button>
         </div>
@@ -1131,6 +1131,22 @@ table{display:block;overflow-x:auto;}
                 setTimeout(submitPin, 150);
             }
         }
+
+        // Keyboard support for PIN pad
+        document.addEventListener('keydown', function(e) {
+            if (isLocked) {
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    enterDigit(e.key);
+                } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                    e.preventDefault();
+                    clearPin();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitPin();
+                }
+            }
+        });
 
         function clearPin() {
             pinInput = pinInput.slice(0, -1);
@@ -1700,8 +1716,82 @@ table{display:block;overflow-x:auto;}
         });
 
         document.addEventListener('keydown', function(e) {
+            // Escape closes any open modal
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+                return;
+            }
+
+            // Enter submits forms when inside modals
+            if (e.key === 'Enter') {
+                // Add Student modal
+                if (document.getElementById('addStudentModal').classList.contains('active')) {
+                    if (document.activeElement.tagName !== 'BUTTON') {
+                        addStudent();
+                    }
+                    return;
+                }
+                // Edit Student modal
+                if (document.getElementById('editModal').classList.contains('active')) {
+                    if (document.activeElement.tagName !== 'BUTTON') {
+                        saveEdit();
+                    }
+                    return;
+                }
+                // Change PIN modal
+                if (document.getElementById('changePinModal').classList.contains('active')) {
+                    if (document.activeElement.tagName !== 'BUTTON') {
+                        changePinSubmit();
+                    }
+                    return;
+                }
+                // Quick Actions - Deduct (if deduct amount is focused)
+                if (document.activeElement.id === 'deductAmount' || document.activeElement.id === 'deductReason') {
+                    deductMoney();
+                    return;
+                }
+                // Quick Actions - Add Money (if add amount is focused)
+                if (document.activeElement.id === 'addAmount') {
+                    addMoney();
+                    return;
+                }
+            }
+
+            // Ctrl/Cmd + F = focus student search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                const searchBox = document.getElementById('searchInput');
+                if (searchBox) {
+                    searchBox.focus();
+                    searchBox.select();
+                }
+                return;
+            }
+
+            // Ctrl/Cmd + D = focus quick student search and select all
+            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                e.preventDefault();
+                const quickSearch = document.getElementById('quickStudentSearch');
+                if (quickSearch) {
+                    quickSearch.focus();
+                    quickSearch.select();
+                }
+                return;
+            }
+
+            // Ctrl/Cmd + S = trigger export backup
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                exportData();
+                return;
+            }
+
+            // Ctrl/Cmd + N = open Add Student modal
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                openModal('addStudentModal');
+                setTimeout(() => document.getElementById('newStudentName').focus(), 100);
+                return;
             }
         });
 
