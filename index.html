@@ -709,40 +709,64 @@ html, body {
     cursor: text;
 }
 
-.install-btn {
-    background: linear-gradient(135deg, #10b981, #059669) !important;
-    color: white !important;
-    animation: installPulse 2s infinite;
-    border: none !important;
-}
-@keyframes installPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-}
-.install-btn:hover {
-    background: linear-gradient(135deg, #059669, #047857) !important;
-    transform: translateY(-1px);
-}
-.install-hint {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--text);
+.class-summary-card {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    z-index: 3000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     display: none;
-    text-align: center;
-    max-width: 90vw;
-    line-height: 1.5;
 }
-.install-hint.show {
+.class-summary-card.active {
     display: block;
     animation: slideUp 0.3s ease;
+}
+.class-summary-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.class-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.class-summary-item {
+    background: rgba(255,255,255,0.15);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+.class-summary-item .label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+.class-summary-item .value {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.class-summary-item .value.warning {
+    color: #fbbf24;
+}
+.class-summary-item .value.danger {
+    color: #fca5a5;
+}
+.class-summary-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: 12px;
+    transition: background 0.2s;
+}
+.class-summary-close:hover {
+    background: rgba(255,255,255,0.3);
 }
 
 @media(max-width:768px){
@@ -835,9 +859,8 @@ table{display:block;overflow-x:auto;}
                         📤 Import
                         <input type="file" id="importFile" accept=".json" onchange="importData(this)">
                     </div>
-                    <button class="btn btn-secondary btn-sm no-print" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-                    <button class="btn btn-secondary btn-sm no-print" onclick="openChangePinModal()">🔐 Change PIN</button>
-                    <button class="btn btn-sm install-btn no-print" id="installBtn" onclick="downloadSiteFile()">📲 Download Me</button>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="toggleDarkMode()">🌙 Dark</button>
+                    <button class="btn btn-secondary btn-sm no-print" onclick="openChangePinModal()">🔐 PIN</button>
                     <button class="btn btn-primary btn-sm no-print" onclick="openModal('addStudentModal')">+ Add Student</button>
                 </div>
             </div>
@@ -924,6 +947,36 @@ table{display:block;overflow-x:auto;}
                 </div>
 
                 <div class="main-content">
+                    <div class="class-summary-card" id="classSummaryCard">
+                        <h3>📊 <span id="classSummaryTitle">Class Summary</span></h3>
+                        <div class="class-summary-grid">
+                            <div class="class-summary-item">
+                                <div class="label">Students</div>
+                                <div class="value" id="csStudents">0</div>
+                            </div>
+                            <div class="class-summary-item">
+                                <div class="label">Total Balance</div>
+                                <div class="value" id="csTotal">UGX 0</div>
+                            </div>
+                            <div class="class-summary-item">
+                                <div class="label">Avg Balance</div>
+                                <div class="value" id="csAvg">UGX 0</div>
+                            </div>
+                            <div class="class-summary-item">
+                                <div class="label">Low Balance</div>
+                                <div class="value warning" id="csLow">0</div>
+                            </div>
+                            <div class="class-summary-item">
+                                <div class="label">Negative</div>
+                                <div class="value danger" id="csNegative">0</div>
+                            </div>
+                            <div class="class-summary-item">
+                                <div class="label">Highest</div>
+                                <div class="value" id="csHighest">UGX 0</div>
+                            </div>
+                        </div>
+                        <button class="class-summary-close" onclick="hideClassSummary()">Hide Summary</button>
+                    </div>
                     <div class="card">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                             <h2>👨‍🎓 Students</h2>
@@ -1063,8 +1116,6 @@ table{display:block;overflow-x:auto;}
     </div>
 
     <div class="toast" id="toast"></div>
-    <div class="install-hint" id="installHint"></div>
-
     <script>
         // ===================== PIN SYSTEM =====================
         const DEFAULT_PIN = "0000";
@@ -1515,6 +1566,13 @@ table{display:block;overflow-x:auto;}
             const classFilter = document.getElementById('classFilter').value;
             const container = document.getElementById('studentsTable');
 
+            // Update class summary if a class is filtered
+            if (classFilter) {
+                updateClassSummary(classFilter);
+            } else {
+                hideClassSummary();
+            }
+
             let filtered = students.filter(s => {
                 const matchesSearch = s.name.toLowerCase().includes(search) || 
                                     s.class.toLowerCase().includes(search);
@@ -1610,7 +1668,36 @@ table{display:block;overflow-x:auto;}
         function resetFilter() {
             document.getElementById('classFilter').value = '';
             document.getElementById('searchInput').value = '';
+            hideClassSummary();
             renderStudents();
+        }
+
+        function updateClassSummary(className) {
+            const classStudents = students.filter(s => s.class === className);
+            if (classStudents.length === 0) {
+                hideClassSummary();
+                return;
+            }
+
+            const total = classStudents.reduce((sum, s) => sum + s.balance, 0);
+            const avg = Math.round(total / classStudents.length);
+            const lowCount = classStudents.filter(s => s.balance < 5000 && s.balance >= 0).length;
+            const negCount = classStudents.filter(s => s.balance < 0).length;
+            const highest = Math.max(...classStudents.map(s => s.balance));
+
+            document.getElementById('classSummaryTitle').textContent = className + ' Summary';
+            document.getElementById('csStudents').textContent = classStudents.length;
+            document.getElementById('csTotal').textContent = formatUGX(total);
+            document.getElementById('csAvg').textContent = formatUGX(avg);
+            document.getElementById('csLow').textContent = lowCount;
+            document.getElementById('csNegative').textContent = negCount;
+            document.getElementById('csHighest').textContent = formatUGX(highest);
+
+            document.getElementById('classSummaryCard').classList.add('active');
+        }
+
+        function hideClassSummary() {
+            document.getElementById('classSummaryCard').classList.remove('active');
         }
 
         // ===================== HISTORY =====================
@@ -1910,76 +1997,6 @@ function toggleDarkMode(){
 document.addEventListener('DOMContentLoaded',()=>{
  if(localStorage.getItem('pm_dark')==='true') document.body.classList.add('dark-mode');
 });
-
-// ===================== INSTALL / DOWNLOAD ME =====================
-        let deferredPrompt = null;
-        let installHintTimer = null;
-
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            const btn = document.getElementById('installBtn');
-            if (btn) btn.style.display = 'inline-flex';
-        });
-
-        window.addEventListener('appinstalled', function() {
-            deferredPrompt = null;
-            const btn = document.getElementById('installBtn');
-            if (btn) {
-                btn.style.display = 'none';
-                btn.textContent = '✅ Installed';
-            }
-            showToast('App installed on your home screen!');
-        });
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function(choice) {
-                    if (choice.outcome === 'accepted') {
-                        showToast('Installing... check your home screen!');
-                    } else {
-                        showInstallHint();
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                showInstallHint();
-            }
-        }
-
-        function downloadSiteFile() {
-            // Create a clean downloadable copy of the current page
-            const pageHtml = document.documentElement.outerHTML;
-            const blob = new Blob([pageHtml], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'PocketMoneyTracker.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('📲 File downloaded! Open it anytime offline.');
-        }
-
-        function showInstallHint() {
-            const hint = document.getElementById('installHint');
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isAndroid = /Android/.test(navigator.userAgent);
-
-            if (isIOS) {
-                hint.innerHTML = '📱 <strong>iPhone:</strong> Tap the <strong>Share</strong> button ⬆️, then <strong>"Add to Home Screen"</strong><br><small>Or tap "Download Me" again to save the file</small>';
-            } else if (isAndroid) {
-                hint.innerHTML = '📱 <strong>Android:</strong> Tap <strong>⋮ menu</strong> → <strong>"Add to Home Screen"</strong><br><small>Or tap "Download Me" again to save the file</small>';
-            } else {
-                hint.innerHTML = '💻 <strong>Computer:</strong> The file has been saved to your Downloads folder!<br><small>Double-click "PocketMoneyTracker.html" anytime to open offline.</small>';
-            }
-
-            hint.classList.add('show');
-            if (installHintTimer) clearTimeout(installHintTimer);
-            installHintTimer = setTimeout(() => hint.classList.remove('show'), 8000);
-        }
 
 // ===================== INIT =====================
         document.addEventListener('DOMContentLoaded', function() {
